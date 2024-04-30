@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class MovieService {
@@ -24,7 +25,7 @@ public class MovieService {
        return movieDTO;
     }
 
-    public List<MovieDTO> getAllMovies() {
+    public List<MovieDTO> findAllMovies() {
         List<Movie> movies = movieRepository.findAll();
 
         List<MovieDTO> movieDTOs = new ArrayList<>();
@@ -37,6 +38,35 @@ public class MovieService {
         return movieDTOs;
     }
 
+    public MovieDTO findMovieById(Long id) {
+
+        Movie findMovieById = movieRepository.findById(id).get();
+
+        MovieDTO movieDTO = new MovieDTO(findMovieById);
+
+        return movieDTO;
+    }
+
+    public MovieDTO update(MovieDTO movieDTO) {
+
+        var entity = movieRepository.findById(movieDTO.getID()).orElseThrow();
+        entity.setTitle(movieDTO.getTitle());
+        entity.setYear(movieDTO.getYear());
+        entity.setGenre(movieDTO.getGenre());
+        entity.setDirector(movieDTO.getDirector());
+
+
+        MovieDTO movieUpdate = new MovieDTO(entity);
+
+        return movieUpdate;
+    }
+
+    public void delete(Long id){
+        var entity = movieRepository.findById(id).orElseThrow(NoSuchElementException::new);
+
+        movieRepository.delete(entity);
+
+    }
 
 
 }

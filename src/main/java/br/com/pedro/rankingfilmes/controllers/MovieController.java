@@ -31,9 +31,34 @@ public class MovieController {
     @GetMapping()
     public ResponseEntity getAllMovies() {
 
-       List<MovieDTO> movies = this.movieService.getAllMovies();
-       
+       List<MovieDTO> movies = this.movieService.findAllMovies();
+
         return ResponseEntity.status(HttpStatus.OK).body(movies);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity getMovieById(@PathVariable Long id) {
+
+        var movie = this.movieService.findMovieById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(movie);
+    }
+
+    @PutMapping
+    public ResponseEntity<MovieDTO> update( @RequestBody MovieDTO dto){
+
+        MovieDTO persisted = movieService.update(dto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(persisted);
+    }
+
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete( @PathVariable(value = "id") Long id){
+
+        movieService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Product Deleted");
     }
 
 }
